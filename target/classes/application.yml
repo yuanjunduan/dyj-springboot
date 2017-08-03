@@ -1,0 +1,71 @@
+server:
+  port: 8081
+
+## Freemarker 配置
+## 文件配置路径
+spring:
+  freemarker:
+    template-loader-path: classpath:/templates/
+    suffix: .html
+ #   prefix: /templates/
+    cache: false
+    charset: UTF-8
+    check-template-location: true
+    content-type: text/html
+    expose-request-attributes: true
+    expose-session-attributes: true
+    request-context-attribute: request
+
+  jpa:
+    database: MYSQL
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    show-sql: true
+    master:
+      datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/jpa
+        username: root
+        password: root
+    slave:
+      datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/jpa
+        username: root
+        password: root
+
+##热部署生效  这里使不使用都无效
+#spring.devtools.restart.enabled: true
+##设置重启的目录
+##spring.devtools.restart.additional-paths: src/main/java
+##classpath目录下的WEB-INF文件夹内容修改不重启
+#spring.devtools.restart.exclude: WEB-INF/**
+
+# 时间序列化
+#spring.jackson:
+#  date-format: yyyy-MM-dd HH:mm:ss
+#  joda-date-time-format: yyyy-MM-dd HH:mm:ss
+#  #joda-date-time-format: yyyy-MM-dd'T'HH:mm:ss.SSSZ
+#  serialization.write_dates_as_timestamps: false
+
+master:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/jpa
+    username: root
+    password: root
+
+slave:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/jpa
+    username: root
+    password: root
+#
+#spring:
+#  datasource:
+#    type: com.alibaba.druid.pool.DruidDataSource
+#    url: jdbc:mysql://localhost:3306/jpa
+#    username: root
+#    password: root
+#    driverClassName: com.mysql.jdbc.Driver
+

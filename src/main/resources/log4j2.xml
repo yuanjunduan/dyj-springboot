@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--设置log4j2的自身log级别为warn-->
+<configuration>
+
+    <properties>
+        <property name="log_path">d:/logs</property>
+
+        <property name="warn-name">${log_path}/warn.log></property>\
+        <property name="warn-pattern">${log_path}/warn%d{yyyy-MM-dd}-%i.log.gz></property>
+    </properties>
+
+    <!--  <RollingRandomAccessFileAppender>-->
+    <Appenders>
+
+        <!--这个输出控制台的配置-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <!--<ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY"/>-->
+
+            <!-- <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss:SSS}] [%p] - %l - %m%n"/>-->
+            <!-- 自定义颜色
+            <PatternLayout pattern="%highlight{%d{HH:mm:ss.SSS} %-5level %logger{36}.%M() @%L - %msg%n}
+               {FATAL=Bright Red, ERROR=Bright Magenta, WARN=Bright Yellow, INFO=Bright Green, DEBUG=Bright Cyan,
+               TRACE=Bright White}"/>-->
+            <!--  %M或%method 输出方法名，如“main”，“getMsg”等字符串-->
+            <!--   %l 输出完整的错误位置  小写的L-->
+            <!--      %L 输出错误行号，如“13”-->
+            <PatternLayout
+                    pattern="%highlight{%d{HH:mm:ss.SSS} %-5level %logger{36}.%M() - %msg%n}"/>
+        </Console>
+        <RollingRandomAccessFile name="warnLog" fileName="d:/logs/warn.log"
+                                 filePattern="d:/logs/warn-%d{yyyy-MM-dd}-%i.log.gz"> <!--append="true"-->
+
+            <PatternLayout pattern="[%date{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%level][%class][%line] - %msg%n"/>
+            <Filters>
+                <ThresholdFilter level="WARN"/>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="20"/>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="DEBUGLog" fileName="d:/logs/DEBUG.log"
+                                 filePattern="d:/logs/DEBUG-%d{yyyy-MM-dd}-%i.log.gz"> <!--append="true"-->
+
+            <PatternLayout pattern="[%date{yyyy-MM-dd HH:mm:ss.SSS}][%thread][%level][%class][%line] - %msg%n"/>
+            <Filters>
+                <ThresholdFilter level="DEBUG"/>
+                <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="20"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <loggers>
+        <!--过滤掉spring和hibernate mybatis的一些无用的debug信息-->
+        <logger name="org.springframework" level="INFO">
+        </logger>
+        <logger name="org.hibernate" level="INFO">
+        </logger>
+        <logger name="org.mybatis" level="INFO">
+        </logger>
+
+
+        <!--<root level="all">&lt;!&ndash;log4j.rootLogger=ALL 所有的记录都可以输出，相当于没有过滤&ndash;&gt;-->
+        <!--</root>-->
+
+        <!-- 第一种
+         <root level="debug">&lt;!&ndash;additivity="false" 不再输出父级日志  &ndash;&gt;
+                <appender-ref ref="Console"/>
+                <appender-ref ref="warnLog"/>
+                <appender-ref ref="DEBUGLog"/>
+            </root>-->
+
+        <!-- 第二种   <AsyncRoot - 异步记录日志 - 需要LMAX Disruptor的支持
+        <AsyncRoot level="debug">
+              <Appender-Ref ref="warnLog"/>
+              <Appender-Ref ref="DEBUGLog"/>
+          </AsyncRoot>-->
+
+
+        <!--
+        测试好几次没有向文件里面写日志
+        <AsyncLogger level="debug">
+               <Appende-rRef ref="warnLog"/>
+               <Appender-Ref ref="DEBUGLog"/>
+           </AsyncLogger>
+   -->
+
+    </loggers>
+
+</configuration>
+
+
+        <!--%d{HH:mm:ss.SSS} 表示输出到毫秒的时间
+        %t 输出当前线程名称
+        %-5level 输出日志级别，-5表示左对齐并且固定输出5个字符，如果不足在右边补0
+        %logger 输出logger名称，因为Root Logger没有名称，所以没有输出
+        %msg 日志文本
+        %n 换行
+        其他常用的占位符有：
+        %L 输出行号
+        %M 输出所在方法名
+        %l  输出语句所在的行数, 包括类名、方法名、文件名、行数
+        %F 输出所在的类文件名，如Client.java-->
+        <!-- Ddebug
+                <ThresholdFilter level="DEBUG"/>
+                <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/>-->
+        <!-- info
+                <ThresholdFilter level="INFO"/>
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/> -->
+        <!-- warn
+                <ThresholdFilter level="WARN"/>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/> -->
+        <!-- error
+             <ThresholdFilter level="ERROR"/> -->
